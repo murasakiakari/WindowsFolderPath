@@ -9,7 +9,7 @@ This library is designed to run on Windows and used to find the path of
 ### Example Command
 <pre>
 from WindowsFolderPath import WindowsFolderPath
-print(WindowsFolderPath().Desktop())
+print(WindowsFolderPath.Desktop)
 # C:\Users\user\Desktop
-print(WindowsFolderPath().Downloads())
+print(WindowsFolderPath.Downloads)
 # E:\ (In my case)</pre>
