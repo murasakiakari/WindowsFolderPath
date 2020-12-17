@@ -15,18 +15,17 @@ class WindowsFolderPath:
         if os.name != 'nt':
             raise self.__NotSupportError('This Program is designed to run on Windows')
     
-    def __get_folder_path(self, folderid):
+    def __get_folder_path(folderid):
         import ctypes
         from ctypes import windll, wintypes
         from uuid import UUID
         class GUID(ctypes.Structure):
-            _fields_ = [("Data1", wintypes.DWORD), ("Data2", wintypes.WORD), ("Data3", wintypes.WORD), ("Data4", wintypes.BYTE * 8)] 
+            _fields_ = [('data1', wintypes.DWORD), ('data2', wintypes.WORD), ('data3', wintypes.WORD), ('data4', wintypes.BYTE * 8)] 
             def __init__(self, folderid):
                 super().__init__()
                 uuid = UUID(folderid)
-                self.Data1, self.Data2, self.Data3, self.Data4[0], self.Data4[1], rest = uuid.fields
-                for i in range(2, 8):
-                    self.Data4[i] = rest >> (8 - i - 1) * 8 & 0xff
+                self.data1, self.data2, self.data3, self.data4[0], self.data4[1], rest = uuid.fields
+                self.data4[2:] = [rest >> (8 - i - 1) * 8 & 255 for i in range(2, 8)]
         SHGetKnownFolderPath = windll.shell32.SHGetKnownFolderPath
         SHGetKnownFolderPath.argtypes = [ctypes.POINTER(GUID), wintypes.DWORD, wintypes.HANDLE, ctypes.POINTER(ctypes.c_wchar_p)]
         pathptr = ctypes.c_wchar_p()
@@ -35,20 +34,9 @@ class WindowsFolderPath:
            raise ctypes.WinError()
         return pathptr.value
 
-    def Desktop(self):
-        return self.__get_folder_path(self.__FolderID.desktop)
-    
-    def Documents(self):
-        return self.__get_folder_path(self.__FolderID.documents)
-    
-    def Downloads(self):
-        return self.__get_folder_path(self.__FolderID.downloads)
-
-    def Music(self):
-        return self.__get_folder_path(self.__FolderID.music)
-    
-    def Pictures(self):
-        return self.__get_folder_path(self.__FolderID.pictures)
-    
-    def Videos(self):
-        return self.__get_folder_path(self.__FolderID.videos)
+    Desktop = __get_folder_path(__FolderID.desktop)
+    Documents = __get_folder_path(__FolderID.documents)
+    Downloads = __get_folder_path(__FolderID.downloads)
+    Music = __get_folder_path(__FolderID.music)
+    Pictures = __get_folder_path(__FolderID.pictures)
+    Videos = __get_folder_path(__FolderID.videos)
