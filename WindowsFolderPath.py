@@ -9,13 +9,11 @@ class WindowsFolderPath:
     
     class __NotSupportError(BaseException):
         pass
-
-    def __init__(self):
-        import os
-        if os.name != 'nt':
-            raise self.__NotSupportError('This Program is designed to run on Windows')
     
     def __get_folder_path(folderid):
+        import os
+        if os.name != 'nt':
+            raise self.__NotSupportError('This Program is designed to run on Windows.')
         import ctypes
         from ctypes import windll, wintypes
         from uuid import UUID
