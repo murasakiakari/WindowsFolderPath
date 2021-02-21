@@ -1,19 +1,7 @@
 class WindowsFolderPath:
-    class __FolderID:
-        desktop = '{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}'
-        documents = '{FDD39AD0-238F-46AF-ADB4-6C85480369C7}'
-        downloads = '{374DE290-123F-4565-9164-39C4925E467B}'
-        music = '{4BD8D571-6D19-48D3-BE97-422220080E43}'
-        pictures = '{33E28130-4E1E-4676-835A-98395C3BC3BB}'
-        videos = '{18989B1D-99B5-455B-841C-AB7C74E4DDFC}'
-    
-    class __NotSupportError(BaseException):
-        pass
-    
     def __get_folder_path(folderid):
-        import os
-        if os.name != 'nt':
-            raise self.__NotSupportError('This Program is designed to run on Windows.')
+        from os import name as os_name
+        assert (os_name == 'nt'), 'This Program is designed to run on Windows only.'
         import ctypes
         from ctypes import windll, wintypes
         from uuid import UUID
@@ -31,10 +19,10 @@ class WindowsFolderPath:
         if SHGetKnownFolderPath(ctypes.byref(guid), 0, 0, ctypes.byref(pathptr)):
            raise ctypes.WinError()
         return pathptr.value
-
-    Desktop = __get_folder_path(__FolderID.desktop)
-    Documents = __get_folder_path(__FolderID.documents)
-    Downloads = __get_folder_path(__FolderID.downloads)
-    Music = __get_folder_path(__FolderID.music)
-    Pictures = __get_folder_path(__FolderID.pictures)
-    Videos = __get_folder_path(__FolderID.videos)
+    
+    Desktop = __get_folder_path('{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}')
+    Documents = __get_folder_path('{FDD39AD0-238F-46AF-ADB4-6C85480369C7}')
+    Downloads = __get_folder_path('{374DE290-123F-4565-9164-39C4925E467B}')
+    Music = __get_folder_path('{4BD8D571-6D19-48D3-BE97-422220080E43}')
+    Pictures = __get_folder_path('{33E28130-4E1E-4676-835A-98395C3BC3BB}')
+    Videos = __get_folder_path('{18989B1D-99B5-455B-841C-AB7C74E4DDFC}')
